@@ -1,0 +1,30 @@
+# $Id: NgTzeYang [nineone@singnet.com.sg] 31 Aug 2008 17:17 $
+# 
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# 
+
+en_SG:
+  lang: en_SG
+  status: active
+
+zh_CN:
+  parent_lang_alias: en_SG
+  lang: zh_CN
+  status: active
+  
+en_US:
+  parent_lang_alias: en_SG
+  lang: en_US
+  status: active
+  
+zh_TW:
+  lang: zh_TW
+  status: active
+
+zh_SG:
+  parent_lang_alias: zh_TW
+  lang: zh_SG
+  status: active
+
+  
+# __END__
