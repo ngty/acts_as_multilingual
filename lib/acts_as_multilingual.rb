@@ -1,4 +1,4 @@
-# $Id: NgTzeYang [nineone@singnet.com.sg] 04 Sep 2008 21:37 $
+# $Id: NgTzeYang [nineone@singnet.com.sg] 06 Sep 2008 13:42 $
 #
 
 
@@ -7,16 +7,23 @@ module NgTzeYang
     module Multilingual
 
       def self.included(base)
-        base.extend Macro
+        base.send   :include, InstanceMacro
+        base.extend ClassMacro
       end
 
 
-      module Macro
+      module ClassMacro
+
+        public
+
+          def multilingual?
+            false
+          end
 
         protected
 
           def acts_as_multilingual(opts={})
-            create_lang_associations
+            create_lang_associations(opts)
             write_inheritable_attribute( :actions_for_lang_aliases, [opts[:actions]||[]].flatten )
             extend  ClassMethods
             include InstanceMethods
@@ -24,19 +31,26 @@ module NgTzeYang
 
         private
 
-          def create_lang_associations
+          def create_lang_associations(opts)
+            foreign_key = opts[:foreign_key] || 'lang_alias_id'
+            conditions = foreign_key.to_s + '=#{to_param}'
             class_eval do
-
-              belongs_to :parent_lang_alias, 
-                :class_name => to_param,
-                :foreign_key => 'lang_alias_id'
-
-              has_many :child_lang_aliases, 
-                :class_name => to_param,
-                :foreign_key => 'lang_alias_id',
-                :conditions => 'lang_alias_id = #{to_param}'
-
+              belongs_to :parent_lang_alias, :class_name => to_param,
+                :foreign_key => foreign_key
+              has_many :child_lang_aliases, :class_name => to_param,
+                :foreign_key => foreign_key, :conditions => conditions
             end
+          end
+
+      end
+
+
+      module InstanceMacro
+
+        public
+          
+          def multilingual?
+            false
           end
 
       end
@@ -44,13 +58,19 @@ module NgTzeYang
 
       module ClassMethods
 
-        def build_with_lang_aliases(attrs)
-          entity = new(attrs.shift)
-          entity.child_lang_aliases.build(attrs)
-          entity
-        end
+        public
 
-        alias_method :new_with_lang_aliases, :build_with_lang_aliases
+          def build_with_lang_aliases(attrs)
+            entity = new(attrs.shift)
+            entity.child_lang_aliases.build(attrs)
+            entity
+          end
+
+          alias_method :new_with_lang_aliases, :build_with_lang_aliases
+
+          def multilingual?
+            true
+          end
 
         private
 
