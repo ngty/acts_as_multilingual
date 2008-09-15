@@ -1,4 +1,4 @@
-# $Id: NgTzeYang [nineone@singnet.com.sg] 06 Sep 2008 11:37 $
+# $Id: NgTzeYang [nineone@singnet.com.sg] 13 Sep 2008 13:00 $
 # 
 
 begin
@@ -8,12 +8,16 @@ rescue LoadError
   exit
 end
 
-Spec::Runner.configure do |config| 
-  config.use_transactional_fixtures = false
-  config.fixture_path = File.dirname(__FILE__) + '/fixtures/' 
-end
-
 plugin_spec_dir = File.dirname(__FILE__)
 ActiveRecord::Base.logger = Logger.new(plugin_spec_dir + "/debug.log")
+
+databases = YAML::load(IO.read(plugin_spec_dir + "/db/database.yml"))
+ActiveRecord::Base.establish_connection(databases[ENV["DB"] || "sqlite3"])
+load(File.join(plugin_spec_dir, "db", "schema.rb"))
+
+Spec::Runner.configure do |config| 
+  config.use_transactional_fixtures = false
+  config.fixture_path = plugin_spec_dir + '/fixtures/' 
+end
 
 # __END__
