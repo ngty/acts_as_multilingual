@@ -1,13 +1,91 @@
 ActsAsMultilingual
 ==================
 
-(work-in-progress).
+This 'act' makes working with multilingual active record models a little bit easier. 
 
 
 Example
 =======
 
-(work-in-progress).
+1. Assuming you have a multilingial model Question:
 
+   > class Question < ActiveRecord::Base
+   >
+   >   #
+   >   # The acts_as_multilingual macro specifies that a question is multilingual, it supports 
+   >   # the following options:
+   >   #
+   >   # 1. :actions ... for any specified action, when the action is done on a question, 
+   >   #    the same action will be done on each and every of the corresponding question in 
+   >   #    another language, eg. if we archive the english question, archive would also 
+   >   #    be done on the chinese question, korean question, etc. 
+   >   #
+   >   # 2. :foreign_key ... by default, acts_as_multilingual uses 'lang_alias_id' to track
+   >   #    questions in the same group, you can override it by setting it to your preferred
+   >   #    choice
+   >   #
+   >   acts_as_multilingual :actions => [ :activate, :archive, :destroy ]
+   >
+   >   def activate
+   >     # do something ... returns false or nil to indicate failure
+   >   end
+   >
+   >   def archive
+   >     # do something ... returns false or nil to indicate failure
+   >   end
+   >
+   > end
 
-Copyright (c) 2008 NgTzeYang, released under the MIT license
+2. The corresponding migration would be:
+
+   > class CreateQuestions < ActiveRecord::Migration
+   >   def self.up
+   >     create_table :questions do |t|
+   >       t.column :lang_alias_id, :integer  # corresponds to macro's :foreign_key 
+   >       t.column :lang, :string            # language for this question
+   >       t.column :content, :string
+   >     end
+   >   end
+   >   def self.down
+   >     drop_table :questions
+   >   end
+   > end
+       
+
+3. When u want to build a group of questions (each of different language):
+
+   > question = Question.build_lang_aliases [
+   >   { :lang => 'en_SG', :content => "How do u do?" },
+   >   { :lang => 'zh_CN', :content => "你好吗？" }
+   > ]
+   > question.save!
+
+   The above returns the 1st question, which is the one in en_SG. An alias of 
+   build_lang_aliases is new_lang_aliases.
+
+4. With continuation from 3, to activate, archive or destroy this group of questions, 
+   simply do:
+
+   > question.activate
+   > question.archive
+   > question.destroy
+
+   Where question can be any one within the group.
+
+5. With continuation from 3, to translate the question to the desired language, simply
+   do:
+
+   > question.to_lang :zh_CN
+
+6. To determine if any model or model class is multilingual:
+
+   > Question.multilingual?  # true
+   > question.multilingual?  # true
+
+   Any active-record model instance/class will support this.
+   
+
+---
+Copyright (c) 2008 NgTzeYang <ngty77[@]gmail.com>, released under the MIT license
+
+# __END__
