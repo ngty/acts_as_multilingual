@@ -1,4 +1,4 @@
-# $Id: NgTzeYang [nineone@singnet.com.sg] 22 Sep 2008 17:03 $
+# $Id: NgTzeYang [nineone@singnet.com.sg] 22 Sep 2008 21:36 $
 #
 
 
@@ -119,7 +119,8 @@ module NgTzeYang
           end
 
           def to_lang(lang)
-            self.lang == lang ? self : lang_aliases.find { |a| a.lang == lang }
+            l = lang.to_s
+            self.lang == l ? self : lang_aliases.find { |a| a.lang == l }
           end
 
         protected
