@@ -1,4 +1,4 @@
-# $Id: NgTzeYang [nineone@singnet.com.sg] 06 Sep 2008 13:42 $
+# $Id: NgTzeYang [nineone@singnet.com.sg] 22 Sep 2008 17:03 $
 #
 
 
@@ -60,13 +60,13 @@ module NgTzeYang
 
         public
 
-          def build_with_lang_aliases(attrs)
+          def build_lang_aliases(attrs)
             entity = new(attrs.shift)
             entity.child_lang_aliases.build(attrs)
             entity
           end
 
-          alias_method :new_with_lang_aliases, :build_with_lang_aliases
+          alias_method :new_lang_aliases, :build_lang_aliases
 
           def multilingual?
             true

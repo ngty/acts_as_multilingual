@@ -1,4 +1,4 @@
-# $Id: NgTzeYang [nineone@singnet.com.sg] 06 Sep 2008 13:34 $
+# $Id: NgTzeYang [nineone@singnet.com.sg] 22 Sep 2008 17:03 $
 # 
 
 require File.dirname(__FILE__) + '/spec_helper'
@@ -91,7 +91,7 @@ describe "Acting as multilingual" do
     # See http://rubyforge.org/pipermail/rspec-users/2007-March/000978.html
     # for testing of alias methods
     #
-    [ :new_with_lang_aliases, :build_with_lang_aliases ].each do | meth |
+    [ :new_lang_aliases, :build_lang_aliases ].each do | meth |
 
       it "using #{meth.to_s}, should build entity with the 1st set of attrs and return entity" do
         entity = MultilingualFirstTestEntity.send( meth, @entities_attrs )
