@@ -1,0 +1,10 @@
+---
+release-0.1.0 / Mon Sep 22 21:38:48 SGT 2008 / NgTzeYang <ngty77[@]gmail.com>
+
+  * compatible with rails-2.1.0
+  * provides functions to support:
+    - building a group of models each representing a different language
+    - propagating of an action on a model to the rest in the group
+    - translating of a model to another of the specified language
+
+--
